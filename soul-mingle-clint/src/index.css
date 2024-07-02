@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Define theme colors as CSS variables */
+:root {
+  --header-color: #FA4D71;
+  --footer-color: #532B79;
+  --title-color: #3E4152;
+  --accent-color: #767677;
+  --banner-color: #FFF7FB;
+  --button-gradient-start: #532B79;
+  --button-gradient-end: #f06292;
+  --button-bg-color: #FA4D71;
+  --tab-bg-color: #EBF0F5;
+}
+
+.header {
+  background-color: var(--header-color);
+}
+
+.theme-color {
+  color: var(--header-color);
+}
+
+.theme-bg {
+  background-color: var(--header-color);
+  color: rgb(255, 255, 255);
+}
+
+.pink-bg {
+  background-color: var(--banner-color);
+}
+
+button {
+  font-family: "Poppins", sans-serif;
+}
+
+.tab-bg {
+  background-color: var(--tab-bg-color);
+}
+
+h1 {
+  color: #ffffff;
+}
+
+h2 {
+  color: var(--title-color);
+  font-family: sans-serif, Arial;
+}
+
+.text {
+  color: var(--title-color);
+}
+
+.accent-color {
+  color: var(--accent-color);
+}
+
+.button {
+  background-image: linear-gradient(to right, var(--button-gradient-start), var(--button-gradient-end));
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-image 0.2s ease-in-out;
+  font-family: "Poppins", sans-serif;
+  background-color: var(--button-bg-color);
+  color: white;
+}
+
+.btn {
+  /* background-image: linear-gradient(to right, var(--button-gradient-start), var(--button-gradient-end)); */
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-image 0.2s ease-in-out;
+  font-family: "Poppins", sans-serif;
+  background-color: var(--header-color);
+  color: white;
+}
+
+
+.button:hover {
+  background-image: linear-gradient(to right, var(--button-gradient-end), var(--button-gradient-start));
+}
+
+.footer {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--footer-color);
+}
+
+nav a {
+  padding: 7px;
+}
+
+nav a.active {
+  background-color: #ffffff;
+  color: var(--header-color);
+}
+
+.fancy-border-radius {
+  border-radius: 0% 100% 0% 100% / 42% 60% 40% 58%;
+}
+
+
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: var(--footer-color) !important;
+}
+
+/* tab style on biodata page */
+
+.tab-bg {
+  background-color: var(--tab-bg-color);
+}
+
+.react-tabs__tab--selected {
+  border: none !important;
+}
+
+/* register page style */
+
+
+.register-section {
+  border-radius: 0% 100% 0% 100% / 42% 60% 40% 58%;
+  background-color: var(--banner-color);
+}
+
+/* dashboard style */
+
+.dashboard {
+  background-color: var(--banner-color);
+}
+
+/* table style */
+.responsive-table {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+td:first-child {
+  font-weight: bold;
+  min-width: 150px;
+}
+
+@media (max-width: 768px) {
+  td:first-child {
+    min-width: 100px;
+  }
+}
+
+/* stripe form style */
+.custom-input {
+  border: 2px solid #c3c3c3;
+  width: 100%;
+  font-size: 1.25rem;
+  /* text-xl */
+  padding: 0.5rem;
+  /* p-2 */
+  border-radius: 0.75rem;
+  /* rounded-xl */
+  color: #000000 !important;
+  padding: 16px;
+}
+
+
+.custom-input-invalid {
+  color: #9e2146;
+}
+
+/* contact us page style */
+.contact-list {
+  list-style: disc;  
+  margin-left: 20px;
+}

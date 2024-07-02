@@ -1,0 +1,213 @@
+import useUserInfo from "../../Hooks/useUserInfo";
+import { useForm } from 'react-hook-form';
+import { FcGoogle } from "react-icons/fc";
+import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import usePublicUrl from "../../Hooks/usePublicUrl";
+
+const Register = () => {
+    const navigation = useNavigate();
+    const axiosPublicUrl = usePublicUrl();
+    const { updaleProfileOfUser, createUser, logOut, googleSingin, setLoader } = useUserInfo();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+
+
+    // control error messages 
+
+    const errorMessages = {
+        'auth/invalid-email': 'Invalid email address.',
+        'auth/user-disabled': 'User account is disabled.',
+        'auth/user-not-found': 'No user found with this email.',
+        'auth/wrong-password': 'Incorrect password.',
+        'unknown-error': 'An unknown error occurred.'
+    };
+
+    const extractErrorCode = errorMessage => {
+        const match = errorMessage.match(/\(([^)]+)\)/);
+        return match ? match[1] : 'unknown-error';
+    }
+
+    // handle create a user
+    const onSubmit = (data) => {
+        console.log(data);
+
+
+        createUser(data.email, data.password)
+            .then(() => {
+
+                updaleProfileOfUser(data.name, data.image)
+                    .then()
+                    .catch((error) => console.log("update user info error", error.message))
+
+                // // creating users to the database
+                const userInfo = {
+                    name: data.name,
+                    email: data.email,
+                }
+                axiosPublicUrl.post('/create-user', userInfo)
+                    .then(res => {
+                        if (res.data.insertedId) {
+                            ///// TODO 
+                            // logOut()
+                            //     .then()
+                            //     .catch(error => console.log(error.message))
+                            // navigation('/login')
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "Registration Success",
+                                showConfirmButton: false,
+                                timer: 5000
+                            });
+                            reset()
+                            navigation('/')
+                        }
+                    })
+            })
+
+            .catch(error => {
+
+                const errorCode = extractErrorCode(error.message);
+                const errorMessage = errorMessages[errorCode] || 'Something went wrong, Try again';
+
+                Swal.fire({
+                    position: "top-end",
+                    icon: "warning",
+                    title: errorMessage,
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                setLoader(false)
+            })
+
+    };
+
+    // handle google sing in
+    const loginWithGoogle = () => {
+        googleSingin()
+            .then(() => {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Login Success",
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+            })
+            .catch(error => {
+                const errorCode = extractErrorCode(error.message);
+                const errorMessage = errorMessages[errorCode] || 'Something went wrong, Try again';
+
+                Swal.fire({
+                    position: "top-end",
+                    icon: "warning",
+                    title: errorMessage,
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                setLoader(false)
+            })
+        navigation('/')
+    }
+
+
+    return (
+        <div className="mt-10 register-section shadow-2xl p-5 min-h-[650px]  ">
+
+            {/* form */}
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-10 w-full md:w-3/4 lg:w-3/5 mx-auto">
+                <div className="relative z-0 w-full mb-5 group">
+                    <input
+                        type="text"
+                        {...register('name', { required: true })}
+                        className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-[#3E4152] focus:outline-none focus:ring-0 focus:border-[#3E4152] peer ${errors.name ? 'border-red-500' : ''}`}
+                        placeholder=" "
+                        required
+                    />
+                    <label
+                        htmlFor="name"
+                        className={`peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#3E4152] peer-focus:dark:text-[#3E4152] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 ${errors.name ? 'text-red-500' : ''}`}
+                    >
+                        Name
+                    </label>
+                    {errors.name && <span className="text-red-500 text-xs">Name is required</span>}
+                </div>
+                <div className="relative z-0 w-full mb-5 group">
+                    <input
+                        type="text"
+                        {...register('photoUrl', { required: true })}
+                        className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-[#3E4152] focus:outline-none focus:ring-0 focus:border-[#3E4152] peer ${errors.photoUrl ? 'border-red-500' : ''}`}
+                        placeholder=" "
+                        required
+                    />
+                    <label
+                        htmlFor="photoUrl"
+                        className={`peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#3E4152] peer-focus:dark:text-[#3E4152] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 ${errors.photoUrl ? 'text-red-500' : ''}`}
+                    >
+                        Photo URL
+                    </label>
+                    {errors.photoUrl && <span className="text-red-500 text-xs">Photo URL is required</span>}
+                </div>
+                <div className="relative z-0 w-full mb-5 group">
+                    <input
+                        type="email"
+                        {...register('email', { required: true })}
+                        className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-[#3E4152] focus:outline-none focus:ring-0 focus:border-[#3E4152] peer ${errors.email ? 'border-red-500' : ''}`}
+                        placeholder=" "
+                        required
+                    />
+                    <label
+                        htmlFor="email"
+                        className={`peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#3E4152] peer-focus:dark:text-[#3E4152] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 ${errors.email ? 'text-red-500' : ''}`}
+                    >
+                        Email address
+                    </label>
+                    {errors.email && <span className="text-red-500 text-xs">Email is required</span>}
+                </div>
+                <div className="relative z-0 w-full mb-5 group">
+                    <input
+                        type="password"
+                        {...register('password', { required: true })}
+                        className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-[#3E4152] focus:outline-none focus:ring-0 focus:border-[#3E4152] peer ${errors.password ? 'border-red-500' : ''}`}
+                        placeholder=" "
+                        required
+                    />
+                    <label
+                        htmlFor="password"
+                        className={`peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#3E4152] peer-focus:dark:text-[#3E4152] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 ${errors.password ? 'text-red-500' : ''}`}
+                    >
+                        Password
+                    </label>
+                    {errors.password && <span className="text-red-500 text-xs">Password is required</span>}
+                </div>
+
+
+                <button
+                    type="submit"
+                    className="button"
+                >
+                    Register
+                </button>
+            </form>
+
+
+            {/* social sin g */}
+
+            <div className="mt-5 w-full md:w-3/4 lg:w-3/5 mx-auto">
+                <button onClick={loginWithGoogle} type="submit" className="button">
+                    <span className="flex items-center gap-2">
+                        <FcGoogle size={25} />
+                        Register With Google</span>
+                </button>
+
+                <Link className="mt-4 block text-gray-500" to='/login'> Already have an account?
+                    <span className="ml-2 theme-color underline hover:text-[#532B79] cursor-pointer">Login</span>
+                </Link>
+
+            </div>
+
+        </div>
+    );
+}
+
+export default Register;
