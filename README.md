@@ -26,6 +26,7 @@ Live Link: https://soul-mingle-ed00e.web.app
 
 + Features sections for success stories and counters showcasing total biodatas, gender-specific biodatas, and completed marriages, highlighting the platform's impact.
 
+___
 <b>Project Overview:</b> 
 Soul Mingle - Matrimonial Website Overview
 
